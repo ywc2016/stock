@@ -1,0 +1,195 @@
+package com.ywc.stock.relation;
+
+import static org.hamcrest.CoreMatchers.nullValue;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.util.Iterator;
+import java.util.Scanner;
+import java.util.Set;
+
+import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
+import org.apache.tools.ant.taskdefs.Concat;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.SimpleGraph;
+
+import com.ywc.stock.inter.RelationInter;
+import com.ywc.stock.util.Constant;
+import com.ywc.stock.util.Utils;
+
+public class PearsonRelation implements RelationInter {
+	private double[][] relationMatrix;
+
+	private SimpleGraph<Integer, DefaultEdge> simpleGraph;
+
+	private double threshold;
+
+	public double getThreshold() {
+		return threshold;
+	}
+
+	public double[][] getRelationMatrix() {
+		return relationMatrix;
+	}
+
+	public SimpleGraph<Integer, DefaultEdge> getSimpleGraph() {
+		return simpleGraph;
+	}
+
+	public PearsonRelation() {
+		readRelationMatrixFromFile();
+		initialSimpleGraph();
+	}
+
+	public PearsonRelation(double threshold) {
+		this.threshold = threshold;
+		readRelationMatrixFromFile();
+		initialSimpleGraph();
+	}
+
+	/**
+	 * 将pearson相关系数矩阵输出到csv文件
+	 */
+	public void outputRelationMatrixToCsv() {
+		double[][] matrix = Utils.readlogYieldMatrix();
+		PearsonsCorrelation pearsonsCorrelation = new PearsonsCorrelation(matrix);
+		RealMatrix correlationMatrix = pearsonsCorrelation.getCorrelationMatrix();
+		RealMatrix pValuesMatrix = pearsonsCorrelation.getCorrelationPValues();
+		RealMatrix standardErrorsMatrix = pearsonsCorrelation.getCorrelationStandardErrors();
+		// System.out.println("相关性矩阵:");
+		// System.out.println(correlationMatrix);
+		// System.out.println("P-Value:");
+		// System.out.println(pValuesMatrix);
+		// System.out.println("标准误差矩阵:");
+		// System.out.println(standardErrorsMatrix);
+		File file = new File(Constant.SOURCE_DATA_FOLDER + Constant.SH_FOLDER + "pearsonCorrelationMatrix.csv");
+		if (file.exists()) {
+			System.out.println("pearsonCorrelationMatrix.csv已经存在,将删除.");
+			file.delete();
+		}
+		try {
+			file.createNewFile();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Utils.writeMatrixToFile(correlationMatrix, file);
+	}
+
+	@Override
+	public void readRelationMatrixFromFile() {
+		File file = new File(Constant.SOURCE_DATA_FOLDER + Constant.SH_FOLDER + "pearsonCorrelationMatrix.csv");
+		if (!file.exists()) {
+			System.out.println("源文件pearsonCorrelationMatrix.csv不存在.");
+			return;
+		}
+		this.relationMatrix = Utils.readMatrix(file);
+	}
+
+	@Override
+	public void initialSimpleGraph() {
+		initialSimpleGraph(this.threshold);
+	}
+
+	@Override
+	public void initialSimpleGraph(double threshold) {
+		simpleGraph = new SimpleGraph<>(DefaultEdge.class);
+		double[][] filteredMatrix = Utils.filterMatrixWithThreshold(this.relationMatrix, threshold);
+		// 加边
+		for (int i = 0; i < filteredMatrix.length; i++) {
+			if (!simpleGraph.containsVertex(i + 1)) {
+				this.simpleGraph.addVertex(i + 1);
+			}
+		}
+		// 加边
+		for (int i = 0; i < filteredMatrix.length; i++) {
+			for (int j = 0; j < filteredMatrix[0].length && i > j; j++) {
+				if (filteredMatrix[i][j] == 1) {
+					simpleGraph.addEdge(i + 1, j + 1);
+				}
+			}
+		}
+	}
+
+	public void writeEdgesToCsv() {
+		File dir = new File(
+				Constant.RESULT_FOLDER + Constant.SH_FOLDER + Constant.EDGES_FOLDER + Constant.PEARSON_FOLDER + "id");
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+		DecimalFormat df = new DecimalFormat("#.##");
+		double d = Double.parseDouble(df.format(threshold));
+		File file = new File(dir.getPath() + "/csv/" + d + ".csv");
+		if (file.exists()) {
+			System.out.println(dir.getPath() + "/csv/" + d + ".csv" + "已经存在,将删除.");
+			file.delete();
+		}
+		try {
+			file.createNewFile();
+			FileWriter fileWriter = new FileWriter(file);
+			fileWriter.write("source,target,weight,type\r\n");
+			Set<DefaultEdge> edges = simpleGraph.edgeSet();
+			Iterator<DefaultEdge> iterator = edges.iterator();
+			for (; iterator.hasNext();) {
+				DefaultEdge defaultEdge = iterator.next();
+				// 默认权重都为1
+				fileWriter.write(simpleGraph.getEdgeSource(defaultEdge) + "," + simpleGraph.getEdgeTarget(defaultEdge)
+						+ "," + 1 + "," + "undirected" + "\r\n");
+			}
+			System.out.println(file.getName() + "已创建.");
+			fileWriter.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * 把变文件写到txt
+	 */
+	public void writeEdgesToTxt() {
+		File dir = new File(
+				Constant.RESULT_FOLDER + Constant.SH_FOLDER + Constant.EDGES_FOLDER + Constant.PEARSON_FOLDER + "id");
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+		DecimalFormat df = new DecimalFormat("#.##");
+		double d = Double.parseDouble(df.format(threshold));
+		File file = new File(dir.getPath() + "/txt/" + d + ".txt");
+		if (file.exists()) {
+			System.out.println(dir.getPath() + "/txt/" + d + ".txt" + "已经存在,将删除.");
+			file.delete();
+		}
+		try {
+			file.createNewFile();
+			FileWriter fileWriter = new FileWriter(file);
+			Set<DefaultEdge> edges = simpleGraph.edgeSet();
+			Iterator<DefaultEdge> iterator = edges.iterator();
+			for (; iterator.hasNext();) {
+				DefaultEdge defaultEdge = iterator.next();
+				// 默认权重都为1
+				fileWriter.write(simpleGraph.getEdgeSource(defaultEdge) + " " + simpleGraph.getEdgeTarget(defaultEdge)
+						+ " " + 1 + "\r\n");
+			}
+			System.out.println(file.getName() + "已创建.");
+			fileWriter.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	@Override
+	public void updateGraph(double threshold) {
+		// TODO Auto-generated method stub
+		this.threshold = threshold;
+		simpleGraph = null;
+		initialSimpleGraph(threshold);
+	}
+
+}
