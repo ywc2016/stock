@@ -1,25 +1,19 @@
 package com.ywc.stock.relation;
 
-import static org.hamcrest.CoreMatchers.nullValue;
+import com.ywc.stock.inter.RelationInter;
+import com.ywc.stock.util.Constant;
+import com.ywc.stock.util.Utils;
+import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.stat.correlation.SpearmansCorrelation;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.SimpleGraph;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Iterator;
-import java.util.Scanner;
 import java.util.Set;
-
-import org.apache.commons.math3.linear.RealMatrix;
-import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
-import org.apache.commons.math3.stat.correlation.SpearmansCorrelation;
-import org.apache.tools.ant.taskdefs.Concat;
-import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.SimpleGraph;
-
-import com.ywc.stock.inter.RelationInter;
-import com.ywc.stock.util.Constant;
-import com.ywc.stock.util.Utils;
 
 public class SpearmanRelation implements RelationInter {
 	private double[][] relationMatrix;
