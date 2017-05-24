@@ -1,17 +1,10 @@
 package com.ywc.stock.test;
 
-import java.io.File;
-
-import org.apache.commons.math3.linear.RealMatrix;
+import com.ywc.stock.relation.PearsonRelation;
+import com.ywc.stock.util.Utils;
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
-import org.jgraph.graph.DefaultGraphCell;
 import org.jgrapht.graph.SimpleGraph;
 import org.junit.Test;
-
-import com.ywc.stock.inter.RelationInter;
-import com.ywc.stock.relation.PearsonRelation;
-import com.ywc.stock.util.Constant;
-import com.ywc.stock.util.Utils;
 
 public class TestRelation {
 	@Test
@@ -28,10 +21,7 @@ public class TestRelation {
 
 	}
 
-	@Test
-	public void testWritePriceMatrixToCsv() {
-		Utils.writePriceMatrixToCsv();
-	}
+
 
 	/**
 	 * 输出pearson相关系数矩阵到文件

@@ -1,19 +1,17 @@
 package com.ywc.stock.test;
 
+import com.ywc.stock.entity.StockList;
+import com.ywc.stock.util.Constant;
+import com.ywc.stock.util.Utils;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.junit.Test;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Date;
-
-import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.junit.Test;
-
-import com.ywc.stock.entity.StockList;
-import com.ywc.stock.util.Constant;
-import com.ywc.stock.util.Utils;
 
 public class TestReadFile {
 
@@ -77,10 +75,7 @@ public class TestReadFile {
 		Utils.readPriceMatrix();
 	}
 
-	@Test
-	public void writeLogarithmicYieldeMatrixToCsvTest() {
-		Utils.writeLogarithmicYieldeMatrixToCsv();
-	}
+
 
 	@Test
 	public void readMatrixTest() {
