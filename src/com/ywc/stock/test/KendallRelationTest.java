@@ -26,4 +26,18 @@ public class KendallRelationTest {
 
         new KendallRelation().outputRelationMatrixToCsv();
     }
+
+    /**
+     * 输出边文件写csv
+     */
+    @Test
+    public void WriteEdgesToCsvTest() {
+        KendallRelation kendallRelation = new KendallRelation();
+        for (double threshold = 0.05; threshold <= 1; threshold += 0.05) {
+            kendallRelation.updateGraph(threshold);
+            kendallRelation.writeEdgesToCsv();
+        }
+
+    }
+
 }

@@ -113,12 +113,14 @@ public class KendallRelation implements RelationInter {
     public void writeEdgesToCsv() {
         File dir = new File(
                 Constant.RESULT_FOLDER + Constant.SH_FOLDER + Constant.EDGES_FOLDER + Constant.KENDALL_FOLDER + "id");
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
+
         DecimalFormat df = new DecimalFormat("#.##");
         double d = Double.parseDouble(df.format(threshold));
         File file = new File(dir.getPath() + "/csv/" + d + ".csv");
+        if (!file.getParentFile().exists()) {
+            System.out.println("目录 " + dir.getParent() + "不存在.将创建.");
+            file.getParentFile().mkdirs();
+        }
         if (file.exists()) {
             System.out.println(dir.getPath() + "/csv/" + d + ".csv" + "已经存在,将删除.");
             file.delete();
@@ -135,7 +137,7 @@ public class KendallRelation implements RelationInter {
                 fileWriter.write(simpleGraph.getEdgeSource(defaultEdge) + "," + simpleGraph.getEdgeTarget(defaultEdge)
                         + "," + 1 + "\r\n");
             }
-            System.out.println(file.getName() + "已创建.");
+            System.out.println(file.getName() + "输出完毕!");
             fileWriter.close();
         } catch (IOException e) {
             // TODO Auto-generated catch block
