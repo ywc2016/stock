@@ -59,7 +59,7 @@ public class KendallRelation implements RelationInter {
             file.getParentFile().mkdirs();
         }
         if (file.exists()) {
-            System.out.println("spearmanCorrelationMatrix.csv已经存在,将删除.");
+            System.out.println("kendallCorrelationMatrix.csv已经存在,将删除.");
             file.delete();
         }
         try {
@@ -75,7 +75,7 @@ public class KendallRelation implements RelationInter {
     public void readRelationMatrixFromFile() {
         File file = new File(Constant.SOURCE_DATA_FOLDER + Constant.SH_FOLDER + "kendallCorrelationMatrix.csv");
         if (!file.exists()) {
-            System.out.println("源文件spearmanCorrelationMatrix.csv不存在.读取相关系数矩阵,相关系数矩阵未完成初始化!");
+            System.out.println("kendallCorrelationMatrix.csv不存在.读取相关系数矩阵,相关系数矩阵未完成初始化!");
             return;
         }
         this.relationMatrix = Utils.readMatrix(file);
@@ -118,7 +118,7 @@ public class KendallRelation implements RelationInter {
         double d = Double.parseDouble(df.format(threshold));
         File file = new File(dir.getPath() + "/csv/" + d + ".csv");
         if (!file.getParentFile().exists()) {
-            System.out.println("目录 " + dir.getParent() + "不存在.将创建.");
+            System.out.println("目录 " + file.getParent() + "不存在.将创建.");
             file.getParentFile().mkdirs();
         }
         if (file.exists()) {
