@@ -1,9 +1,13 @@
 package com.ywc.stock.test;
 
 import com.ywc.stock.relation.SpearmanRelation;
+import com.ywc.stock.util.Constant;
+import com.ywc.stock.util.Utils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.stat.correlation.SpearmansCorrelation;
 import org.junit.Test;
+
+import java.io.File;
 
 /**
  * Created by ywcrm on 2017/5/24.
@@ -38,4 +42,21 @@ public class SpearmanRelationTest {
 
     }
 
+    /**
+     * 将社团文件按id排序
+     */
+    @Test
+    public void sortCommunityCsvByCommunityIdTest() {
+        Utils.sortCommunityCsvByCommunityId(new File(Constant.RESULT_FOLDER + Constant.SH_FOLDER
+                + Constant.COMMUNITY_FOLDER + Constant.SPEARMAN_FOLDER + "id/csv"));
+    }
+
+    /**
+     * 把目录下的社团id文件转换成name文件
+     */
+    @Test
+    public void convertCommunityIdFilesToNameFilesTest() {
+        Utils.convertCommunityIdFilesToNameFiles(new File(Constant.RESULT_FOLDER + Constant.SH_FOLDER
+                + Constant.COMMUNITY_FOLDER + Constant.SPEARMAN_FOLDER + "id/csv"));
+    }
 }

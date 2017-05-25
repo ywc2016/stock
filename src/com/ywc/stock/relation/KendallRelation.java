@@ -4,6 +4,7 @@ import com.ywc.stock.inter.RelationInter;
 import com.ywc.stock.util.Constant;
 import com.ywc.stock.util.Utils;
 import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.stat.correlation.KendallsCorrelation;
 import org.apache.commons.math3.stat.correlation.SpearmansCorrelation;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
@@ -15,7 +16,7 @@ import java.text.DecimalFormat;
 import java.util.Iterator;
 import java.util.Set;
 
-public class SpearmanRelation implements RelationInter {
+public class KendallRelation implements RelationInter {
     private double[][] relationMatrix;
 
     private SimpleGraph<Integer, DefaultEdge> simpleGraph;
@@ -34,12 +35,12 @@ public class SpearmanRelation implements RelationInter {
         return simpleGraph;
     }
 
-    public SpearmanRelation() {
+    public KendallRelation() {
         readRelationMatrixFromFile();
         initialSimpleGraph();
     }
 
-    public SpearmanRelation(double threshold) {
+    public KendallRelation(double threshold) {
         this.threshold = threshold;
         readRelationMatrixFromFile();
         initialSimpleGraph();
@@ -50,14 +51,13 @@ public class SpearmanRelation implements RelationInter {
      */
     public void outputRelationMatrixToCsv() {
         double[][] matrix = Utils.readlogYieldMatrix();
-        SpearmansCorrelation spearmansCorrelation = new SpearmansCorrelation();
-        RealMatrix correlationMatrix = spearmansCorrelation.computeCorrelationMatrix(matrix);
-        File file = new File(Constant.SOURCE_DATA_FOLDER + Constant.SH_FOLDER + "spearmanCorrelationMatrix.csv");
-        if (!file.getParentFile().exists()) {
+        KendallsCorrelation kendallsCorrelation = new KendallsCorrelation(matrix);
+        RealMatrix correlationMatrix = kendallsCorrelation.getCorrelationMatrix();
+        File file = new File(Constant.SOURCE_DATA_FOLDER + Constant.SH_FOLDER + "kendallCorrelationMatrix.csv");
+        if (!file.getParentFile().exists()) {//目录不存在，将创建
             System.out.println("目录 " + file.getParent() + " 不存在.将创建");
             file.getParentFile().mkdirs();
         }
-
         if (file.exists()) {
             System.out.println("spearmanCorrelationMatrix.csv已经存在,将删除.");
             file.delete();
@@ -68,13 +68,14 @@ public class SpearmanRelation implements RelationInter {
             e.printStackTrace();
         }
         Utils.writeMatrixToFile(correlationMatrix, file);
+        System.out.println(file.getName() + " 写入完成.");
     }
 
     @Override
     public void readRelationMatrixFromFile() {
-        File file = new File(Constant.SOURCE_DATA_FOLDER + Constant.SH_FOLDER + "spearmanCorrelationMatrix.csv");
+        File file = new File(Constant.SOURCE_DATA_FOLDER + Constant.SH_FOLDER + "kendallCorrelationMatrix.csv");
         if (!file.exists()) {
-            System.out.println("源文件spearmanCorrelationMatrix.csv不存在.");
+            System.out.println("源文件spearmanCorrelationMatrix.csv不存在.读取相关系数矩阵,相关系数矩阵未完成初始化!");
             return;
         }
         this.relationMatrix = Utils.readMatrix(file);
@@ -93,7 +94,7 @@ public class SpearmanRelation implements RelationInter {
 
         simpleGraph = new SimpleGraph<>(DefaultEdge.class);
         double[][] filteredMatrix = Utils.filterMatrixWithThreshold(this.relationMatrix, threshold);
-        // 加边
+        // 加点
         for (int i = 0; i < filteredMatrix.length; i++) {
             if (!simpleGraph.containsVertex(i + 1)) {
                 this.simpleGraph.addVertex(i + 1);
@@ -111,7 +112,7 @@ public class SpearmanRelation implements RelationInter {
 
     public void writeEdgesToCsv() {
         File dir = new File(
-                Constant.RESULT_FOLDER + Constant.SH_FOLDER + Constant.EDGES_FOLDER + Constant.SPEARMAN_FOLDER + "id");
+                Constant.RESULT_FOLDER + Constant.SH_FOLDER + Constant.EDGES_FOLDER + Constant.KENDALL_FOLDER + "id");
         if (!dir.exists()) {
             dir.mkdirs();
         }
@@ -134,7 +135,7 @@ public class SpearmanRelation implements RelationInter {
                 fileWriter.write(simpleGraph.getEdgeSource(defaultEdge) + "," + simpleGraph.getEdgeTarget(defaultEdge)
                         + "," + 1 + "\r\n");
             }
-            System.out.println(file.getName() + "写入完成.");
+            System.out.println(file.getName() + "已创建.");
             fileWriter.close();
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -170,7 +171,7 @@ public class SpearmanRelation implements RelationInter {
                 fileWriter.write(simpleGraph.getEdgeSource(defaultEdge) + " " + simpleGraph.getEdgeTarget(defaultEdge)
                         + " " + 1 + "\r\n");
             }
-            System.out.println(file.getName() + "已创建.");
+            System.out.println(file.getName() + "写入完成!");
             fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();

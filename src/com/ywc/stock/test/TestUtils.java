@@ -8,6 +8,7 @@ import java.io.File;
 
 public class TestUtils {
 
+
     /**
      * 将clu社团文件转换成csv
      */
@@ -27,12 +28,12 @@ public class TestUtils {
     }
 
     /**
-     * 将id社团文件转换成name
+     * 将社团文件按id排序
      */
     @Test
-    public void convertConmmunityIdFileToNameFileTest() {
-        Utils.convertConmmunityIdFileToNameFile(new File(Constant.RESULT_FOLDER + Constant.SH_FOLDER
-                + Constant.COMMUNITY_FOLDER + Constant.PEARSON_FOLDER + "id/csv/0.8.csv"));
+    public void sortCommunityCsvByCommunityIdTest() {
+        Utils.sortCommunityCsvByCommunityId(new File(Constant.RESULT_FOLDER + Constant.SH_FOLDER
+                + Constant.COMMUNITY_FOLDER + Constant.PEARSON_FOLDER + "id/csv"));
     }
 
     /**
@@ -44,15 +45,15 @@ public class TestUtils {
                 + Constant.COMMUNITY_FOLDER + Constant.PEARSON_FOLDER + "id/csv"));
     }
 
+
     /**
-     * 将社团文件按id排序
+     * 将id社团文件转换成name
      */
     @Test
-    public void sortCommunityCsvByCommunityIdTest() {
-        Utils.sortCommunityCsvByCommunityId(new File(Constant.RESULT_FOLDER + Constant.SH_FOLDER
-                + Constant.COMMUNITY_FOLDER + Constant.PEARSON_FOLDER + "id/csv"));
+    public void convertConmmunityIdFileToNameFileTest() {
+        Utils.convertConmmunityIdFileToNameFile(new File(Constant.RESULT_FOLDER + Constant.SH_FOLDER
+                + Constant.COMMUNITY_FOLDER + Constant.PEARSON_FOLDER + "id/csv/0.8.csv"));
     }
-
 
     /**
      * 把价格矩阵输出到csv
