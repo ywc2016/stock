@@ -48,7 +48,7 @@ public class SpearmanRelationTest {
     @Test
     public void sortCommunityCsvByCommunityIdTest() {
         Utils.sortCommunityCsvByCommunityId(new File(Constant.RESULT_FOLDER + Constant.SH_FOLDER
-                + Constant.COMMUNITY_FOLDER + Constant.SPEARMAN_FOLDER + "id/csv"));
+                + Constant.COMMUNITY_FOLDER + Constant.SPEARMAN_FOLDER + "id"));
     }
 
     /**
@@ -57,6 +57,6 @@ public class SpearmanRelationTest {
     @Test
     public void convertCommunityIdFilesToNameFilesTest() {
         Utils.convertCommunityIdFilesToNameFiles(new File(Constant.RESULT_FOLDER + Constant.SH_FOLDER
-                + Constant.COMMUNITY_FOLDER + Constant.SPEARMAN_FOLDER + "id/csv"));
+                + Constant.COMMUNITY_FOLDER + Constant.SPEARMAN_FOLDER + "id"));
     }
 }
