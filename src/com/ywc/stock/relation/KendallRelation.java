@@ -5,7 +5,6 @@ import com.ywc.stock.util.Constant;
 import com.ywc.stock.util.Utils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.stat.correlation.KendallsCorrelation;
-import org.apache.commons.math3.stat.correlation.SpearmansCorrelation;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 
@@ -147,7 +146,7 @@ public class KendallRelation implements RelationInter {
     }
 
     /**
-     * 把变文件写到txt
+     * 把边文件写到txt
      */
     public void writeEdgesToTxt() {
         File dir = new File(
