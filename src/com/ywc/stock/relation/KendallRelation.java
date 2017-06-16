@@ -192,12 +192,23 @@ public class KendallRelation implements RelationInter {
 
     public static void main(String[] args) {
         KendallRelation kendallRelation = new KendallRelation();
+
+//        输出关系矩阵到csv
 //        kendallRelation.outputRelationMatrixToCsv();
 
-        for (double threshold = 0.05; threshold <= 1; threshold += 0.05) {
-            kendallRelation.updateGraph(threshold);
-            kendallRelation.writeEdgesToCsv();
-        }
+//        输出边文件
+//        for (double threshold = 0.05; threshold <= 1; threshold += 0.05) {
+//            kendallRelation.updateGraph(threshold);
+//            kendallRelation.writeEdgesToCsv();
+//        }
+
+//        将社团id文件排序
+//        Utils.sortCommunityCsvByCommunityId(new File(Constant.RESULT_FOLDER + Constant.SH_FOLDER
+//                + Constant.COMMUNITY_FOLDER + Constant.KENDALL_FOLDER + "id"));
+
+//        将id文件转换成name文件
+        Utils.convertCommunityIdFilesToNameFiles(new File(Constant.RESULT_FOLDER + Constant.SH_FOLDER
+                + Constant.COMMUNITY_FOLDER + Constant.KENDALL_FOLDER + "id"));
 
     }
 
