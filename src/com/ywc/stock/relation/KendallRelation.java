@@ -149,6 +149,7 @@ public class KendallRelation implements RelationInter {
      * 把边文件写到txt
      */
     public void writeEdgesToTxt() {
+
         File dir = new File(
                 Constant.RESULT_FOLDER + Constant.SH_FOLDER + Constant.EDGES_FOLDER + Constant.SPEARMAN_FOLDER + "id");
         if (!dir.exists()) {
@@ -180,12 +181,24 @@ public class KendallRelation implements RelationInter {
 
     }
 
+
     @Override
     public void updateGraph(double threshold) {
         // TODO Auto-generated method stub
         this.threshold = threshold;
         simpleGraph = null;
         initialSimpleGraph(threshold);
+    }
+
+    public static void main(String[] args) {
+        KendallRelation kendallRelation = new KendallRelation();
+//        kendallRelation.outputRelationMatrixToCsv();
+
+        for (double threshold = 0.05; threshold <= 1; threshold += 0.05) {
+            kendallRelation.updateGraph(threshold);
+            kendallRelation.writeEdgesToCsv();
+        }
+
     }
 
 }
