@@ -3,6 +3,7 @@ package com.ywc.stock.relation;
 import com.ywc.stock.inter.RelationInter;
 import com.ywc.stock.util.Constant;
 import com.ywc.stock.util.Utils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 import org.jgrapht.graph.DefaultEdge;
@@ -187,26 +188,54 @@ public class PearsonRelation implements RelationInter {
         initialSimpleGraph(threshold);
     }
 
+    /**
+     * 输出网络中的边数和节点数
+     */
+    public void outputVertexesAndEdges() {
+        DecimalFormat df = new DecimalFormat("#.##");
 
-    public static void main(String[] args) {
-        SpearmanRelation spearmanRelation = new SpearmanRelation();
-
-//        输出关系矩阵到csv
-        spearmanRelation.outputRelationMatrixToCsv();
-
-//        输出边文件
-        for (double threshold = 0.05; threshold <= 1; threshold += 0.05) {
-            spearmanRelation.updateGraph(threshold);
-            spearmanRelation.writeEdgesToCsv();
+        File file = new File(Constant.RESULT_FOLDER + Constant.SH_FOLDER + "numOfVertexesAndEdges/pearson/" + Double.parseDouble(df.format(threshold)) + ".csv");
+        try {
+            FileUtils.writeStringToFile(file, "numOfVertexes" + "," + "numOfEdges" + "\r\n", true);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
+
+        int numOfVertexes = this.simpleGraph.vertexSet().size();
+        int numOfEdges = this.simpleGraph.edgeSet().size();
+        try {
+            FileUtils.writeStringToFile(file, numOfVertexes + "," + numOfEdges + "\r\n", true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void main(String[] args) {
+        PearsonRelation pearsonRelation = new PearsonRelation();
+
+//        输出关系矩阵到csv
+//        pearsonRelation.outputRelationMatrixToCsv();
+
+//        输出边文件
+//        for (double threshold = 0.05; threshold <= 1; threshold += 0.05) {
+//            pearsonRelation.updateGraph(threshold);
+//            pearsonRelation.writeEdgesToCsv();
+//        }
+
 //        将社团id文件排序
-        Utils.sortCommunityCsvByCommunityId(new File(Constant.RESULT_FOLDER + Constant.SH_FOLDER
-                + Constant.COMMUNITY_FOLDER + Constant.SPEARMAN_FOLDER + "id"));
+//        Utils.sortCommunityCsvByCommunityId(new File(Constant.RESULT_FOLDER + Constant.SH_FOLDER
+//                + Constant.COMMUNITY_FOLDER + Constant.PEARSON_FOLDER + "id"));
 
 //        将id文件转换成name文件
-        Utils.convertCommunityIdFilesToNameFiles(new File(Constant.RESULT_FOLDER + Constant.SH_FOLDER
-                + Constant.COMMUNITY_FOLDER + Constant.SPEARMAN_FOLDER + "id"));
+//        Utils.convertCommunityIdFilesToNameFiles(new File(Constant.RESULT_FOLDER + Constant.SH_FOLDER
+//                + Constant.COMMUNITY_FOLDER + Constant.PEARSON_FOLDER + "id"));
 
+        //        输出网络的节点数和边数
+        for (double threshold = 0.05; threshold <= 1; threshold += 0.05) {
+            pearsonRelation.updateGraph(threshold);
+            pearsonRelation.outputVertexesAndEdges();
+        }
     }
 }

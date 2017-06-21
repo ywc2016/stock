@@ -145,6 +145,11 @@ public class Utils {
 
     }
 
+    /**
+     * 将源文件读到StockList
+     *
+     * @return
+     */
     public static StockList readCsvToStockList() {
         StockList stockList = new StockList();
         File file = new File(Constant.SOURCE_DATA_FOLDER + Constant.SH_FOLDER + "sh.csv");
