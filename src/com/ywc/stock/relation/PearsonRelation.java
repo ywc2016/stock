@@ -1,5 +1,7 @@
 package com.ywc.stock.relation;
 
+import com.ywc.stock.entity.DegreeAndFrequency;
+import com.ywc.stock.entity.DegreeAndFrequencytList;
 import com.ywc.stock.inter.RelationInter;
 import com.ywc.stock.util.Constant;
 import com.ywc.stock.util.Utils;
@@ -13,6 +15,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -94,7 +97,7 @@ public class PearsonRelation implements RelationInter {
     public void initialSimpleGraph(double threshold) {
         simpleGraph = new SimpleGraph<>(DefaultEdge.class);
         double[][] filteredMatrix = Utils.filterMatrixWithThreshold(this.relationMatrix, threshold);
-        // 加边
+        // 加节点
         for (int i = 0; i < filteredMatrix.length; i++) {
             if (!simpleGraph.containsVertex(i + 1)) {
                 this.simpleGraph.addVertex(i + 1);
@@ -212,6 +215,26 @@ public class PearsonRelation implements RelationInter {
     }
 
 
+    /**
+     * 输出度分布
+     */
+    public void outPutDistributionOfDegree() {
+        DegreeAndFrequencytList degreeAndFrequencylList = new DegreeAndFrequencytList();
+        degreeAndFrequencylList.setThreshold(this.threshold);
+        Set<Integer> set = this.simpleGraph.vertexSet();
+        //加度为0的点
+        for (int i = 0; i < this.simpleGraph.vertexSet().size(); i++) {
+            degreeAndFrequencylList.add(new DegreeAndFrequency(i, 0));
+        }
+        for (Integer v : set) {
+            degreeAndFrequencylList.addDegree(this.simpleGraph.degreeOf(v));
+        }
+
+        Collections.sort(degreeAndFrequencylList);
+        degreeAndFrequencylList.writeTocsv();
+    }
+
+
     public static void main(String[] args) {
         PearsonRelation pearsonRelation = new PearsonRelation();
 
@@ -233,9 +256,16 @@ public class PearsonRelation implements RelationInter {
 //                + Constant.COMMUNITY_FOLDER + Constant.PEARSON_FOLDER + "id"));
 
         //        输出网络的节点数和边数
+//        for (double threshold = 0.05; threshold <= 1; threshold += 0.05) {
+//            pearsonRelation.updateGraph(threshold);
+//            pearsonRelation.outputVertexesAndEdges();
+//        }
+
+        //        输出网络的度分布
         for (double threshold = 0.05; threshold <= 1; threshold += 0.05) {
             pearsonRelation.updateGraph(threshold);
-            pearsonRelation.outputVertexesAndEdges();
+            pearsonRelation.outPutDistributionOfDegree();
         }
+
     }
 }
