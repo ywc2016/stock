@@ -1,24 +1,16 @@
 package com.ywc.stock.test;
 
-import java.io.File;
-
-import javax.swing.JOptionPane;
-
 import com.ywc.stock.relation.PearsonRelation;
+import com.ywc.stock.util.Constant;
+import com.ywc.stock.util.Utils;
 import org.apache.commons.math3.analysis.function.Log;
-import org.apache.commons.math3.geometry.spherical.twod.Edge;
 import org.jgraph.JGraph;
 import org.jgraph.graph.DefaultEdge;
-import org.jgrapht.EdgeFactory;
-import org.jgrapht.GraphTests;
-import org.jgrapht.alg.flow.PushRelabelMFImpl.VertexExtension;
-import org.jgrapht.graph.AsUndirectedGraph;
-import org.jgrapht.graph.ClassBasedEdgeFactory;
 import org.jgrapht.graph.SimpleGraph;
 import org.junit.Test;
 
-import com.ywc.stock.util.Constant;
-import com.ywc.stock.util.Utils;
+import javax.swing.*;
+import java.io.File;
 
 public class TestOthers {
     @Test
@@ -114,6 +106,12 @@ public class TestOthers {
             pearsonRelation.writeEdgesToCsv();
         }
 
+    }
+
+    @Test
+    public void logTest() {
+        Log log = new Log();
+        System.out.println(log.value(2.7));
     }
 
 }

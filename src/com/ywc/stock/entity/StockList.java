@@ -33,4 +33,9 @@ public class StockList extends ArrayList<Stock> {
         }
         return null;
     }
+
+    public static void main(String[] args) {
+        StockList stockList = Utils.readCsvToStockList();
+    }
+
 }

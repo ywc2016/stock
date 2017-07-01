@@ -68,6 +68,7 @@ public class TestUtils {
      */
     @Test
     public void writeLogarithmicYieldeMatrixToCsvTest() {
+
         Utils.writeLogarithmicYieldeMatrixToCsv();
     }
 }
